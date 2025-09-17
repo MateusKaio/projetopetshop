@@ -1,0 +1,32 @@
+body{
+   background-color:lightcyan;
+   color: #005991;
+   text-align:center;
+
+}
+.topo{
+   text-align: center;
+   font-family: Tahoma;
+   margin-right: 20px;
+}
+
+.corpo button{
+    height: 35px;
+    width: 100px;
+    border-radius:15px;
+    background-color:#0375af;
+    border: none;
+    color: lightcyan;
+    margin: 8px;
+}
+
+.corpo input{
+    background-color: lightcyan;
+    border-radius:15px;
+    height: 35px;
+    width: 200px;
+    border: none;
+    color: #0375af;
+    margin: 8px;
+    text-align: center;
+}

@@ -1,0 +1,59 @@
+body{
+   background-color:lightcyan;
+   color: #005991;
+
+
+}
+.topo{
+
+    margin-top:10px;
+    margin-left:5px:
+    margin-right:5px;
+    text-align: center;
+    border: radius 10%;
+    font-family: Tahoma;
+}
+
+.img{
+    margin-top: 50px;
+
+}
+
+h1{
+    font-size: 40px;
+}
+.corpo {
+    text-align: center;
+    margin-left: 35%;
+    margin-top:40px;
+    margin-right: 35%;
+    margin-button: 10px;
+    background-color: deepskyblue;
+    font-family: Tahoma, geneva;
+    font-size: 20px;
+    border-radius: 20px;
+    padding-top: 15px;
+
+
+}
+.corpo button{
+    height: 35px;
+    width: 200px;
+    border-radius:15px;
+    background-color:#0375af;
+    border: none;
+    color: lightcyan;
+    text-align:center;
+}
+
+.corpo input{
+    font-family: tohama;
+    background-color: lightcyan;
+    border-radius:15px;
+    height: 35px;
+    width: 200px;
+    border: none;
+    color: #0375af;
+    margin: 8px;
+    text-align: center;
+}

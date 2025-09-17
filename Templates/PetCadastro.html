@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Área de cadastro</title>
+    <link rel="stylesheet" href="../static/PetCadastro.css">
+</head>
+<body>
+  <div class="topo">
+    <h1>🐶 Petshop Bicho Chique 🐶</h1>
+    <h3> Este é o petshop bicho chique, cadastre o seu animal e nós vamos cuidar dele para você!</h3>
+  </div>
+
+
+  <div class="corpo">
+    <h2>Cadastrar Animal</h2>
+    <form action="/adicionar" method="post">
+
+
+        <input type="text" name="nome" placeholder=" Nome do pet:" required>
+
+     <br>
+        <input type="text" name="especie" placeholder=" Especie:" required>
+
+     <br>
+         <input type="email" name="email" placeholder=" E-mail do dono:" required>
+
+     <br>
+         <input type="text" name="Tipodeservico" placeholder=" Tipos de serviço:" required>
+     <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+
+      <div class="img">
+  <img src="static//imagem pet.png" width="350px" height="300px">
+   </div>
+</div>
+
+</body>
+</html>

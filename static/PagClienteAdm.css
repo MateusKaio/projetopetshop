@@ -1,0 +1,20 @@
+body{
+   background-color:lightcyan;
+   color: #005991;
+   text-align: center;
+ }
+
+.corpo h1{
+ font-family: Tahoma;
+}
+
+.corpo button{
+    background-color: #0375af;
+    border-radius:20px;
+    height: 35px;
+    width: 200px;
+    border: none;
+    color: lightcyan;
+    margin: 8px;
+    text-align: center;
+}

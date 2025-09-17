@@ -1,0 +1,37 @@
+body{
+background-color:deepskyblue;
+font-family: Tahoma;
+color: #0375af;
+margin-top: 40px;
+}
+
+.topo{
+text-align: center;
+margin-top: 40px;
+}
+
+.h1{
+font-size: 40px;
+}
+
+.topo input{
+    text-align: center;
+    background-color: lightcyan;
+    border-radius:15px;
+    height: 35px;
+    width: 200px;
+    border: none;
+    color: deepskyblue;
+    margin: 8px;
+
+}
+
+.topo button{
+    height: 35px;
+    width: 100px;
+    border-radius:15px;
+    background-color:#0375af;
+    border: none;
+    color: lightcyan;
+    margin: 8px;
+}

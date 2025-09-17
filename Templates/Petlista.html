@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Lista de Animais</title>
+    <link rel="stylesheet" href="../static/Petlista.css">
+</head>
+<body>
+<div class="topo">
+
+    <h1>Animais cadastrados</h1>
+    {% if animais %}
+
+</div>
+
+<div class="corpo">
+
+            <h2>Lista</h2>
+
+      <ul>
+          {% for animal in animais %}
+          <li>
+              <p>Nome:</p> {{ animal.nome }}
+              <p>Espécie:</p> {{ animal.especie }}
+              <p>email_dono:</p> {{ animal.email }}
+              <p>Serviço:</p> {{ animal.tipodeservico }}
+
+              <form action="/remover" method="post">
+                  <input type="hidden" name="nome" value="{{ animal.nome }}">
+              <br>
+                  <button type="submit">Remover</button>
+              </form>
+
+          </li>
+                {% endfor %}
+            </ul>
+    {% else %}
+        <p>Nenhum animal cadastrado ainda.</p>
+    {% endif %}
+
+    <br>
+    <form action="/voltar" method="post">
+        <button type="submit">Cadastrar novo</button>
+    </form>
+</div>
+</body>
+</html>

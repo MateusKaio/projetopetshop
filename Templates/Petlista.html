@@ -10,40 +10,39 @@
 <div class="topo">
 
     <h1>Animais cadastrados</h1>
-    {% if animais %}
 
 </div>
 
-<div class="corpo">
+ <div class="corpo">
 
             <h2>Lista</h2>
 
-      <ul>
-          {% for animal in animais %}
-          <li>
-              <p>Nome:</p> {{ animal.nome }}
-              <p>Espécie:</p> {{ animal.especie }}
-              <p>email_dono:</p> {{ animal.email }}
-              <p>Serviço:</p> {{ animal.tipodeservico }}
+       {% if lista %}
+            <hr>
+            {% for animal in lista %}
 
-              <form action="/remover" method="post">
-                  <input type="hidden" name="nome" value="{{ animal.nome }}">
-              <br>
-                  <button type="submit">Remover</button>
-              </form>
+                <p>
+                    Nome: <a href="/detalhes?email={{animal[2]}}">{{animal[0]}}</a>
+                </p>
+                <hr>
 
-          </li>
-                {% endfor %}
-            </ul>
+            {% endfor %}
+
     {% else %}
+
         <p>Nenhum animal cadastrado ainda.</p>
     {% endif %}
 
+        <form action="/remover" method="post">
+          <button type="submit">Remover</button>
+        </form>
     <br>
     <form action="/voltar" method="post">
         <button type="submit">Cadastrar novo</button>
     </form>
-</div>
+
+
+ </div>
 </body>
 
 </html>

@@ -43,10 +43,11 @@ def pag_cadastro():
 
 @app.route('/escolher', methods=['post'])
 def escolher():
+    global animais
     if 'cliente' in request.form:
         return render_template('PetCadastro.html')
     elif 'servidor' in request.form:
-        return render_template('PetSenha.html')
+        return render_template('Petlista.html',lista = animais)
 
 
 
@@ -54,7 +55,7 @@ def escolher():
 def verificar_senha():
     senha = request.form.get('senha')
     if senha == 'pet':
-        return render_template('PetLista.html', animais=animais)
+        return render_template('Petlista.html', animais=animais)
     else:
         return render_template('PetSenha.html')
 
@@ -67,19 +68,44 @@ def adicionar():
     tipodeservico = request.form["Tipodeservico"]
 
     animais.append([nome, especie, email_dono, tipodeservico ])
+    mensagem =  nome + ' adicionado com sucesso'
+    print(mensagem)
     return render_template("PetCadastro.html", animais=animais)
+
 
 @app.route('/voltar', methods=['post'])
 def voltar():
     return render_template('PetCadastro.html')
 
+@app.route('/menu', methods=['post'])
+def menu():
+    return render_template('PagClienteAdm.html')
+
+
+
 @app.route('/remover', methods=['post'])
 def remover_animal():
     global animais
-    nome = request.form.get("nome")
-    animais = [a for a in animais if a["nome"] != nome]
+    nome = request.form.get("email_dono")
+
+    for animal in animais:
+        if animais[0] == nome:
+            animais.remove(animal)
+            print("animal removido")
+
 
     return render_template('PetLista.html', animais=animais)
+
+@app.route('/detalhes')
+def mostrar_detalhes():
+    email = request.values.get('email')
+    achei = None
+    for animal in animais:
+        if email == animal[2]:
+            achei = animal
+        break
+
+    return render_template('detalhes.html', animais=achei)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

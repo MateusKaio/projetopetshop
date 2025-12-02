@@ -19,6 +19,13 @@ body{
     color: lightcyan;
     margin: 8px;
 }
+.corpo select{
+
+    border-radius:15px;
+    background-color:#0375af;
+    border: none;
+    margin: 8px;
+}
 
 .corpo input{
     background-color: lightcyan;

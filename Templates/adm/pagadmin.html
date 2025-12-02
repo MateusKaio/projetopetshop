@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <title>Login - PetShop</title>
     <link rel="stylesheet" href="../static/PetSenha.css">
+
 </head>
 <body>
+    <form action="/logout">
+            <button type="submit">sair</button>
+    </form>
    <div class="topo">
+
 
     <h1> Pagina admin (apenas para o ADM)</h1>
 
     <form action="/verificarsenha" method="post">
-
 
         <input type="text" name="login" placeholder= "digite o login:" required>
         <br>
@@ -21,6 +25,9 @@
 
         <button type="submit">Entrar</button>
     </form>
+
+
+
 <br>
 
 </div>

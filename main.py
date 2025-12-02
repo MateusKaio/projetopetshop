@@ -1,29 +1,32 @@
 from flask import *
 
 app = Flask(__name__)
+app.secret_key = 'KJH#45K45JHQASs'
 animais = []
-usuarios = [['a','a@a','a']]
+usuarios = [['m','m@m','m']]
 
 @app.route('/')
 def pagina_principal():
     return render_template('PetLogin.html')
 
-@app.route('/Login', methods=['post'])
+@app.route('/login', methods=['post'])
 def pag_login():
     global usuarios
     email = request.form.get('email')
     senha = request.form.get('senha')
-    logado = False
-    for user in usuarios:
-        if email == user[1] and senha == user[2]:
-            logado = True
-            break
-
-    if logado:
-        return render_template('pagClienteAdm.html')
+    tipo = request.form.get('tipo')
+    if tipo == 'cliente':
+        if email == 'm@m' and senha == 'm':
+            session['cliente'] = email
+            return render_template('PetCadastro.html')
+        else:
+            return render_template('PetLogin.html')
     else:
-        return render_template('PetLogin.html')
-
+        if email == 'admin@m' and senha == '123':
+            session['admin'] = 'admin'
+            return render_template('adm/pagadmin.html')
+        else:
+            return render_template('PetLogin.html')
 
 @app.route("/cadastrarcliente", methods=["post"])
 def cadastrar():
@@ -36,28 +39,23 @@ def cadastrar():
     return render_template("PetLogin.html")
 
 
-
 @app.route('/Cadastrese', methods=['post'])
 def pag_cadastro():
     return render_template('Cadastrese.html')
 
-@app.route('/escolher', methods=['post'])
-def escolher():
-    global animais
-    if 'cliente' in request.form:
-        return render_template('PetCadastro.html')
-    elif 'servidor' in request.form:
-        return render_template('Petlista.html',lista = animais)
 
-
-
-@app.route('/verificarsenha', methods=['post'])
+@app.route('/verificarsenha', methods=['post','get'])
 def verificar_senha():
-    senha = request.form.get('senha')
-    if senha == 'pet':
-        return render_template('Petlista.html', animais=animais)
+    if request.method == 'GET':
+        return render_template('adm/Petlista.html', lista=animais)
     else:
-        return render_template('PetSenha.html')
+        login = request.form.get('login')
+        senha = request.form.get('senha')
+        if login == 'admin' and senha == '123':
+            session['login'] = login
+            return render_template('adm/Petlista.html', lista=animais)
+        else:
+            return render_template('adm/PetSenha.html')
 
 @app.route("/adicionar", methods=["post"])
 def adicionar():
@@ -68,10 +66,14 @@ def adicionar():
     tipodeservico = request.form["Tipodeservico"]
 
     animais.append([nome, especie, email_dono, tipodeservico ])
-    mensagem =  nome + ' adicionado com sucesso'
-    print(mensagem)
-    return render_template("PetCadastro.html", animais=animais)
+    msg =  nome + ' adicionado com sucesso'
+    print(msg)
+    return render_template("PetCadastro.html", animais=animais, msg=msg)
 
+@app.route('/logout')
+def fazer_logout():
+    session.clear()
+    return render_template('PetLogin.html')
 
 @app.route('/voltar', methods=['post'])
 def voltar():
@@ -79,22 +81,24 @@ def voltar():
 
 @app.route('/menu', methods=['post'])
 def menu():
-    return render_template('PagClienteAdm.html')
+    return render_template('adm/pagadmin.html')
 
 
 
 @app.route('/remover', methods=['post'])
 def remover_animal():
     global animais
-    nome = request.form.get("email_dono")
+    email_dono = request.form.get("email_dono")
 
     for animal in animais:
-        if animais[0] == nome:
+        if animal[2] == email_dono:
             animais.remove(animal)
             print("animal removido")
 
 
-    return render_template('PetLista.html', animais=animais)
+    return render_template('adm/PetLista.html', lista=animais)
+
+
 
 @app.route('/detalhes')
 def mostrar_detalhes():
@@ -105,7 +109,7 @@ def mostrar_detalhes():
             achei = animal
         break
 
-    return render_template('detalhes.html', animais=achei)
+    return render_template('adm/detalhes.html', animais=achei)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

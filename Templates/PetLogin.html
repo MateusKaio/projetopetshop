@@ -11,7 +11,13 @@
     </div>
     <div class="corpo">
     <h2> Fazer Login </h2>
-    <form action="/Login" method="post">
+    <form action="/login" method="post">
+
+        <select name="tipo">
+            <option value="servidor">Servidor</option>
+            <option value="cliente">Cliente</option>
+        </select>
+        <br>
 
       <input type="email" name="email" placeholder="Digite seu e-mail" required>
       <br>

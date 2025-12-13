@@ -1,115 +1,177 @@
 from flask import *
+from dao.usuarioDAO import *
+from dao.animalDAO import *
+
+from dao.banco import *
+
+usuarios = [['m','m@m','m']]
+
 
 app = Flask(__name__)
 app.secret_key = 'KJH#45K45JHQASs'
-animais = []
-usuarios = [['m','m@m','m']]
+
+init_db()
+
+@app.before_request
+def pegar_sessao():
+    g.session = Session()
+
+@app.teardown_appcontext
+def encerrar_sessao(exception=None):
+    Session.remove()
+
 
 @app.route('/')
 def pagina_principal():
     return render_template('PetLogin.html')
 
-@app.route('/login', methods=['post'])
+
+@app.route('/login', methods=['POST'])
 def pag_login():
-    global usuarios
     email = request.form.get('email')
     senha = request.form.get('senha')
     tipo = request.form.get('tipo')
+
+    usuario_dao = UsuarioDAO(Session)
+
     if tipo == 'cliente':
-        if email == 'm@m' and senha == 'm':
-            session['cliente'] = email
-            return render_template('PetCadastro.html')
-        else:
-            return render_template('PetLogin.html')
-    else:
-        if email == 'admin@m' and senha == '123':
-            session['admin'] = 'admin'
-            return render_template('adm/pagadmin.html')
-        else:
-            return render_template('PetLogin.html')
+        user = usuario_dao.autenticar(email, senha)
+        if user:
+                session['cliente'] = email
+                return render_template('PetCadastro.html')
+        return render_template('PetLogin.html')
 
-@app.route("/cadastrarcliente", methods=["post"])
+    if email == 'admin@m' and senha == '123':
+        session['admin'] = True
+        return render_template('adm/pagadmin.html')
+
+    return render_template('PetLogin.html')
+
+
+@app.route("/cadastrarcliente", methods=["POST", 'GET'])
 def cadastrar():
-    nome = request.form["nome"]
-    email = request.form["email"]
-    senha = request.form["Senha"]
+    if request.method == 'GET':
+        return render_template('cadastrouser.html')
 
-    usuarios.append([nome,email,senha])
+    usuario_dao = UsuarioDAO(g.session)
+
+    nome = request.form.get("nome")
+    email = request.form.get("email")
+    senha = request.form.get("senha")
+
+    novo_usuario = Usuario(nome=nome, email=email, senha=senha)
+
+    usuario_dao.criar(novo_usuario)
 
     return render_template("PetLogin.html")
 
 
-@app.route('/Cadastrese', methods=['post'])
-def pag_cadastro():
-    return render_template('Cadastrese.html')
+@app.route('/logout')
+def fazer_logout():
+    session.clear()
+    return redirect('/')
+
+def cliente_logado():
+    return 'cliente' in session
 
 
-@app.route('/verificarsenha', methods=['post','get'])
-def verificar_senha():
-    if request.method == 'GET':
-        return render_template('adm/Petlista.html', lista=animais)
-    else:
-        login = request.form.get('login')
-        senha = request.form.get('senha')
-        if login == 'admin' and senha == '123':
-            session['login'] = login
-            return render_template('adm/Petlista.html', lista=animais)
-        else:
-            return render_template('adm/PetSenha.html')
-
-@app.route("/adicionar", methods=["post"])
+@app.route('/adicionar', methods=['POST'])
 def adicionar():
 
-    nome= request.form["nome"]
+    if not cliente_logado():
+        return redirect('/')
+
+    nome = request.form["nome"]
     especie = request.form["especie"]
     email_dono = request.form["email"]
     tipodeservico = request.form["Tipodeservico"]
 
-    animais.append([nome, especie, email_dono, tipodeservico ])
-    msg =  nome + ' adicionado com sucesso'
-    print(msg)
-    return render_template("PetCadastro.html", animais=animais, msg=msg)
+    animal_dao = AnimalDAO(g.session)
 
-@app.route('/logout')
-def fazer_logout():
-    session.clear()
-    return render_template('PetLogin.html')
+    novo = Animal(
+        nome=nome,
+        especie=especie,
+        email_dono=email_dono,
+        tipodeservico=tipodeservico
+    )
 
-@app.route('/voltar', methods=['post'])
+    animal_dao.criar(novo)
+
+    msg = f"{nome} adicionado com sucesso"
+    return render_template("PetCadastro.html", msg=msg)
+
+@app.route('/voltar', methods=['POST'])
 def voltar():
+    if not cliente_logado():
+        return redirect('/')
     return render_template('PetCadastro.html')
 
-@app.route('/menu', methods=['post'])
+
+def admin_logado():
+    return 'admin' in session
+
+
+@app.route('/menu', methods=['POST'])
 def menu():
+    if not admin_logado():
+        return redirect('/')
     return render_template('adm/pagadmin.html')
 
 
+@app.route('/verificarsenha', methods=['GET', 'POST'])
+def verificar_senha():
 
-@app.route('/remover', methods=['post'])
+    if request.method == 'GET':
+        if admin_logado():
+            animal_dao = AnimalDAO(g.session)
+            lista = animal_dao.listar_animais()
+            return render_template('adm/Petlista.html', lista=lista)
+
+    login = request.form.get('login')
+    senha = request.form.get('senha')
+
+    if login == 'admin' and senha == '123':
+        session['admin'] = True
+        animal_dao = AnimalDAO(g.session)
+        lista = animal_dao.listar_animais()
+        return render_template('adm/Petlista.html', lista=lista)
+    return render_template('adm/PetSenha.html')
+
+
+@app.route('/remover', methods=['POST'])
 def remover_animal():
-    global animais
-    email_dono = request.form.get("email_dono")
+    if not admin_logado():
+        return redirect('/')
 
-    for animal in animais:
-        if animal[2] == email_dono:
-            animais.remove(animal)
-            print("animal removido")
+    id = request.form.get("id")
 
+    animal_dao = AnimalDAO(g.session)
+    animal = animal_dao.buscar_por_id(id)
 
-    return render_template('adm/PetLista.html', lista=animais)
+    if animal:
+        g.session.delete(animal)
+        g.session.commit()
 
+    lista = animal_dao.listar_animais()
+
+    animal_dao = AnimalDAO(g.session)
+    lista = animal_dao.listar_animais()
+    return render_template('adm/Petlista.html', lista=lista)
 
 
 @app.route('/detalhes')
 def mostrar_detalhes():
-    email = request.values.get('email')
-    achei = None
-    for animal in animais:
-        if email == animal[2]:
-            achei = animal
-        break
+    if not admin_logado():
+        return redirect('/')
 
-    return render_template('adm/detalhes.html', animais=achei)
+    id_animal = request.values.get('id')
+
+    animal_dao = AnimalDAO(g.session)
+    animal = animal_dao.buscar_por_id(id_animal)
+
+    return render_template('adm/detalhes.html', animal=animal)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+

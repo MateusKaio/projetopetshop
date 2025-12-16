@@ -13,7 +13,9 @@ class AnimalDAO:
         self.session.commit()
 
     def buscar_por_id(self, id):
-        return self.session.query(Animal).filter_by(id=id).first()
+        return self.session.query(Animal)\
+            .filter_by(id=id)\
+            .first()
 
     def listar_animais(self):
         return self.session.query(Animal).all()

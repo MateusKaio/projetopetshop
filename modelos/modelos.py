@@ -18,7 +18,7 @@ class Usuario(Base):
 class Animal(Base):
     __tablename__ = 'animais'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String)
     especie = Column(String)
     email_dono = Column(String)

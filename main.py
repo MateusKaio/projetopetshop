@@ -152,8 +152,6 @@ def remover_animal():
         g.session.delete(animal)
         g.session.commit()
 
-    lista = animal_dao.listar_animais()
-
     animal_dao = AnimalDAO(g.session)
     lista = animal_dao.listar_animais()
     return render_template('adm/Petlista.html', lista=lista)

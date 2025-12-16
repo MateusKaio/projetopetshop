@@ -22,7 +22,7 @@
             {% for animal in lista %}
 
                 <p>
-                    Nome: <a href="/detalhes?email={{animal[2]}}">{{animal[0]}}</a>
+                    Nome: <a href="/detalhes?email={{animal.email_dono}}">{{animal.nome}}</a>
                 </p>
                 <hr>
 

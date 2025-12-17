@@ -138,19 +138,21 @@ def verificar_senha():
     return render_template('adm/PetSenha.html')
 
 
-@app.route('/remover', methods=['POST'])
+@app.route('/remover', methods=['POST','GET'])
 def remover_animal():
     if not admin_logado():
         return redirect('/')
 
-    id = request.form.get("id")
+    id = request.values.get('id')
+    print(f'id do animal:{id}')
 
     animal_dao = AnimalDAO(g.session)
-    animal = animal_dao.buscar_por_id(id)
+    animal = animal_dao.remover_animal(id)
 
     if animal:
-        g.session.delete(animal)
-        g.session.commit()
+        print(f'removido')
+    else:
+        print(f'erro ao remover')
 
     animal_dao = AnimalDAO(g.session)
     lista = animal_dao.listar_animais()

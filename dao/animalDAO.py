@@ -25,3 +25,13 @@ class AnimalDAO:
         if user and user.senha == senha:
             return user
         return None
+    
+    def remover_animal(self,id):
+
+        animal = self.session.query(Animal).filter_by(id = id).first()
+        resultado = self.session.delete(animal)
+        if resultado:
+            self.session.commit()
+            return True
+        else:
+            return False
